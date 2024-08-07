@@ -10,5 +10,6 @@ namespace CodePulse.API.Data
         }
         public DbSet<Blogpost> Blogposts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<BlogImage> Blogimages { get; set; }    
     }
 }

@@ -6,5 +6,14 @@ namespace CodePulse.API.Repositories.Interface
     {
         Task<Blogpost> CreateAsync(Blogpost blogpost);
 
+        Task<IEnumerable<Blogpost>> GetAllBlogPostsAsync();
+
+        Task<Blogpost> GetByIdAsync(Guid id);
+
+        Task<Blogpost?> UpdateAsync(Blogpost blogpost);
+
+        Task<Blogpost?> DeleteAsync(Guid id);
+
+        Task<Blogpost?> GetByUrlHandleAsync(string urlHandle);
     }
 }

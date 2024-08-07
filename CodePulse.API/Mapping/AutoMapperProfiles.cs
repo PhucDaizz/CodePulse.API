@@ -23,8 +23,10 @@ namespace CodePulse.API.Mapping
                     Id = x.Id,
                     Name = x.Name,
                     UrlHandle = x.UrlHandle,
-                })));
+                }))).ReverseMap();
 
+            CreateMap<UpdateBlogPostRequestDto, Blogpost>().
+                ForMember(dest => dest.Categories, opt => opt.Ignore()).ReverseMap();
         }
     }
 }

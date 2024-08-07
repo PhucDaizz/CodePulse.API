@@ -47,5 +47,84 @@ namespace CodePulse.API.Controllers
 
         }
 
+
+        [HttpGet]   
+        public async Task<IActionResult> GetAllBlogPosts()
+        {
+            var blogposts = await blogPostRepository.GetAllBlogPostsAsync();
+
+            var reponse = mapper.Map<List<BlogpostDto>>(blogposts);
+
+            return Ok(reponse);
+        }   
+
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetBlogPostById([FromRoute]Guid id)
+        {
+            var blogPost = await blogPostRepository.GetByIdAsync(id);
+            if (blogPost != null)
+            {
+                var response = mapper.Map<BlogpostDto>(blogPost);
+                return Ok(response); 
+            }
+            return NotFound();
+
+        }
+
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> EditBlogPost([FromRoute]Guid id, UpdateBlogPostRequestDto request)
+        {
+            
+            var blogpost = mapper.Map<Blogpost>(request);
+            blogpost.Id = id;
+            foreach (var categoryID in request.Categories)
+            {
+                var existingCategory = await categoryRepository.GetByIdAsync(categoryID);
+                if (existingCategory != null)
+                {
+                    blogpost.Categories.Add(existingCategory);
+                }
+            }
+            var updateBlogPost = await blogPostRepository.UpdateAsync(blogpost);
+            if(updateBlogPost != null)
+            {
+                var reponse = mapper.Map<BlogpostDto>(updateBlogPost);
+                return Ok(reponse);
+            }
+            return NotFound();
+
+        }
+
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteBlogPost([FromRoute]Guid id)
+        {
+            var deleteBlogPost = await blogPostRepository.DeleteAsync(id);
+
+            if (deleteBlogPost != null)
+            {
+                var response = mapper.Map<BlogpostDto>(deleteBlogPost);
+                return Ok(response);
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("{urlHandle}")]
+        public async Task<IActionResult> GetBlogPostByUrlHandle([FromRoute] string urlHandle)
+        {
+            var blospost = await blogPostRepository.GetByUrlHandleAsync(urlHandle); 
+
+            if (blospost != null)
+            {
+                var response = mapper.Map<BlogpostDto>(blospost);
+                return Ok(response);
+            }
+            return NotFound();
+        }
     }
 }
